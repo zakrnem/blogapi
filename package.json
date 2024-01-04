@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node ./bin/www.js",
-    "serverstart": "DEBUG=blogapi:* npm start"
+    "serverstart": "DEBUG=blogapi:* npm start",
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
