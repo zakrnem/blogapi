@@ -10,11 +10,11 @@ const userSchema = new Schema({
   admin: { type: Boolean, default: false },
 });
 
-mongoose.virtual("fullname").get(() => {
+userSchema.virtual("fullname").get(() => {
   return first_name + " " + last_name;
 });
 
-mongoose.virtual("url").get(() => {
+userSchema.virtual("url").get(() => {
   return `/users/${this._id}`;
 });
 

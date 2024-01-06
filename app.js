@@ -4,9 +4,9 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import models from "./models";
-import routes from "./routes";
-
 import indexRouter from "./routes/index";
+import clientRouter from "./routes/client";
+import adminRouter from "./routes/admin";
 
 const app = express();
 
@@ -21,6 +21,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/client", clientRouter);
+//app.use("/admin", adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

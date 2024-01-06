@@ -3,12 +3,17 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  title: { type: String, required: true, minLength: 5, maxLength: 120 },
   content: { type: String, required: true, minLength: 10, maxLength: 1000 },
   createdAt: { type: Date, default: Date.now },
   visible: { type: Boolean, default: false },
 });
 
-mongoose.virtual("url").get(() => {
+postSchema.virtual("summary").get(() => {
+  return "Split string at a paragraph end." + content;
+});
+
+postSchema.virtual("url").get(() => {
   return `/posts/${this._id}`;
 });
 
