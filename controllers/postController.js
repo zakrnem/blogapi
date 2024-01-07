@@ -38,8 +38,8 @@ const formatted_post_get = asyncHandler(async (req, res) => {
   res.json(posts);
 });
 
-export {
-    formatted_post_get,
-    post_get,
-    post_page_get,
-}
+export default {
+  formatted_post_get,
+  post_get,
+  post_page_get,
+};
