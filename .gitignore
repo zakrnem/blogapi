@@ -1,2 +1,3 @@
 node_modules
 pending.txt
+populatedb/populatePasswords.js
