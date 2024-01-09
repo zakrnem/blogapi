@@ -7,6 +7,20 @@ import models from "./models";
 import indexRouter from "./routes/index";
 import clientRouter from "./routes/client";
 import adminRouter from "./routes/admin";
+import dotenv from "dotenv";
+dotenv.config();
+
+// Setup mongoDB connection
+import mongoose from "mongoose";
+mongoose.set("strictQuery", false);
+
+const mongoDB = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@${process.env.URL}`;
+
+main().catch((err) => debug(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+  debug("Connected to MongoDB Atlas");
+}
 
 const app = express();
 
