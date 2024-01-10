@@ -136,13 +136,13 @@ async function commentCreate(index, user, post, message) {
 }
 
 async function createComments() {
-  console.log('Adding comments')
+  console.log("Adding comments");
   await Promise.all([
     commentCreate(0, users[0], posts[0], populateComments[0]),
     commentCreate(1, users[0], posts[1], populateComments[1]),
     commentCreate(2, users[2], posts[2], populateComments[2]),
     commentCreate(3, users[1], posts[3], populateComments[3]),
     commentCreate(4, users[3], posts[1], populateComments[4]),
-    commentCreate(5, users[3], posts[0], populateComments[5])
+    commentCreate(5, users[3], posts[0], populateComments[5]),
   ]);
 }

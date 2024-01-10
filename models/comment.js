@@ -8,7 +8,7 @@ const commentSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-commentSchema.virtual("url").get(() => {
+commentSchema.virtual("url").get(function () {
   return `/comments/${this._id}`;
 });
 

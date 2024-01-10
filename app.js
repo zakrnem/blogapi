@@ -9,6 +9,7 @@ import clientRouter from "./routes/client";
 import adminRouter from "./routes/admin";
 import dotenv from "dotenv";
 dotenv.config();
+import debug from "debug";
 
 // Setup mongoDB connection
 import mongoose from "mongoose";

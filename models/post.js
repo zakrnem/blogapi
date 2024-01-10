@@ -9,11 +9,11 @@ const postSchema = new Schema({
   visible: { type: Boolean, default: false },
 });
 
-postSchema.virtual("summary").get(() => {
-  return "Split string at a paragraph end." + content;
+postSchema.virtual("summary").get(function () {
+  return `Split string at a paragraph end. ${this.content}`;
 });
 
-postSchema.virtual("url").get(() => {
+postSchema.virtual("url").get(function () {
   return `/posts/${this._id}`;
 });
 

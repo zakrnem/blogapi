@@ -10,11 +10,11 @@ const userSchema = new Schema({
   admin: { type: Boolean, default: false },
 });
 
-userSchema.virtual("fullname").get(() => {
-  return first_name + " " + last_name;
+userSchema.virtual("fullname").get(function () {
+  return this.first_name + " " + this.last_name;
 });
 
-userSchema.virtual("url").get(() => {
+userSchema.virtual("url").get(function () {
   return `/users/${this._id}`;
 });
 
