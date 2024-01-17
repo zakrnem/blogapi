@@ -48,20 +48,26 @@ async function formatPosts(posts) {
 
 const client_post_get = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
-  let comments = await Comment.find({ post: post._id }).exec();
-  comments = await comment_controller.format_comments(comments);
+  try {
+    let comments = await Comment.find({ post: post._id }).exec();
+    comments = await comment_controller.format_comments(comments);
+  
+    let postObj = post.toObject();
+    postObj = { ...postObj, comments: comments };
+    res.status(200).json(postObj);
+  } catch {
+    res
+      .status(404)
+      .json({ message: `No post with Id: ${req.params.id} exists.` });
+  }
 
-  let postObj = post.toObject();
-  postObj = { ...postObj, comments: comments };
-
-  res.json(postObj);
 });
 
 const client_posts_get = asyncHandler(async (req, res) => {
   let posts = await Post.find().sort({ createdAt: -1 }).limit(3).exec();
   posts = await formatPosts(posts);
 
-  res.json(posts);
+  res.status(200).json(posts);
 });
 
 const post_page_get = asyncHandler(async (req, res) => {
@@ -69,7 +75,11 @@ const post_page_get = asyncHandler(async (req, res) => {
   let posts = await Post.find().sort({ createdAt: -1 }).limit(3).skip(N).exec();
   posts = await formatPosts(posts);
 
-  res.json(posts);
+  if (posts.length > 0) {
+    res.status(200).json(posts);
+  } else {
+    res.status(404).json({message: "There are no more posts."})
+  }
 });
 
 // ADMIN methods

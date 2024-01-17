@@ -19,6 +19,8 @@ const format_comments = async function (comments) {
   return comments;
 };
 
+// Add method for clients to reply a comment
+
 // ADMIN methods
 
 const admin_comments = async function (comments) {
@@ -52,7 +54,7 @@ const comment_get = asyncHandler(async (req, res) => {
     createdAt: comment.createdAt,
   };
 
-  res.json(comment);
+  res.status(200).json(comment);
 });
 
 export default {
