@@ -4,14 +4,12 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import models from "./models";
-import indexRouter from "./routes/index";
 import clientRouter from "./routes/client";
 import adminRouter from "./routes/admin";
 import dotenv from "dotenv";
 dotenv.config();
 import debug from "debug";
 import session from "express-session";
-import cookieParser from "cookie-parser";
 
 // Setup mongoDB connection
 import mongoose from "mongoose";
@@ -37,21 +35,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+const secret = process.env.SESSION_SECRET;
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000, // 1 hour (adjust as needed)
+      maxAge: 30 * 1000,
     },
   }),
 );
 
-app.use("/", indexRouter);
-app.use("/client", clientRouter);
-app.use("/admin", adminRouter);
+app.use("/api/client", clientRouter);
+app.use("/api/admin", adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
