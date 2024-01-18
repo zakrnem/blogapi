@@ -1,3 +1,5 @@
 node_modules
 pending.txt
 populatedb/populatePasswords.js
+.env
+bfg-1.14.0.jar

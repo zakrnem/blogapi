@@ -51,7 +51,7 @@ const client_post_get = asyncHandler(async (req, res) => {
   try {
     let comments = await Comment.find({ post: post._id }).exec();
     comments = await comment_controller.format_comments(comments);
-  
+
     let postObj = post.toObject();
     postObj = { ...postObj, comments: comments };
     res.status(200).json(postObj);
@@ -60,7 +60,6 @@ const client_post_get = asyncHandler(async (req, res) => {
       .status(404)
       .json({ message: `No post with Id: ${req.params.id} exists.` });
   }
-
 });
 
 const client_posts_get = asyncHandler(async (req, res) => {
@@ -78,7 +77,7 @@ const post_page_get = asyncHandler(async (req, res) => {
   if (posts.length > 0) {
     res.status(200).json(posts);
   } else {
-    res.status(404).json({message: "There are no more posts."})
+    res.status(404).json({ message: "There are no more posts." });
   }
 });
 
@@ -119,14 +118,12 @@ const create_post = asyncHandler(async (req, res) => {
     content: req.body.content,
     visible: req.body.visible,
   });
-  
+
   if (existingPost.length > 0) {
-    res
-      .status(400)
-      .json({
-        message:
-          "There's another post with the same name, please change the name.",
-      });
+    res.status(400).json({
+      message:
+        "There's another post with the same name, please change the name.",
+    });
   } else {
     await newPost.save();
     res.status(201).json(newPost);
@@ -157,7 +154,7 @@ const admin_posts_page = asyncHandler(async (req, res) => {
   if (posts.length > 0) {
     res.status(200).json(posts);
   } else {
-    res.status(404).json({message: "There are no more posts."})
+    res.status(404).json({ message: "There are no more posts." });
   }
 });
 

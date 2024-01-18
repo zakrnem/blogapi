@@ -10,6 +10,8 @@ import adminRouter from "./routes/admin";
 import dotenv from "dotenv";
 dotenv.config();
 import debug from "debug";
+import session from "express-session";
+import cookieParser from "cookie-parser";
 
 // Setup mongoDB connection
 import mongoose from "mongoose";
@@ -34,6 +36,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000, // 1 hour (adjust as needed)
+    },
+  }),
+);
 
 app.use("/", indexRouter);
 app.use("/client", clientRouter);
