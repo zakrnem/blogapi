@@ -12,10 +12,10 @@ const login = asyncHandler(async (req, res) => {
     if (match) {
       req.session.userId = user._id;
 
-      res.cookie('session-cookie', req.sessionID, {
-        secure: process.env.NODE_ENV === 'production',
+      res.cookie("session-cookie", req.sessionID, {
+        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 60 * 1000,
+        maxAge: 2 * 60 * 1000,
       });
 
       res
@@ -46,7 +46,7 @@ const isAuthenticated = (req, res, next) => {
   if (req.session.userId) {
     next();
   } else {
-    res.status(401).send('Unauthorized, please log in.');
+    res.status(401).send("Unauthorized, please log in.");
   }
 };
 

@@ -44,7 +44,7 @@ app.use(
     cookie: {
       name: "session-cookie",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 1000,
+      maxAge: 2 * 60 * 1000,
     },
   }),
 );

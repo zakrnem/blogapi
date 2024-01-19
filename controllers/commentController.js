@@ -4,6 +4,35 @@ import Comment from "../models/comment";
 import User from "../models/user";
 import { mongoose } from "mongoose";
 
+const comment_get = asyncHandler(async (req, res) => {
+  let comment = await Comment.findById(req.params.id);
+  const author = await User.findById(comment.user._id).exec();
+
+  comment = {
+    _id: comment._id,
+    author: author.fullname,
+    user: comment.user,
+    post: comment.post,
+    message: comment.message,
+    createdAt: comment.createdAt,
+  };
+
+  res.status(200).json(comment);
+});
+
+const comment_post = asyncHandler(async (req, res) => {
+  const newComment = new Comment({
+    user: req.session.userId,
+    post: req.params.id,
+    message: req.body.message,
+  });
+
+  await newComment.save();
+  res.status(200).json(newComment);
+});
+
+// Add method for clients to reply a comment
+
 // CLIENT methods
 
 const format_comments = async function (comments) {
@@ -18,8 +47,6 @@ const format_comments = async function (comments) {
   }
   return comments;
 };
-
-// Add method for clients to reply a comment
 
 // ADMIN methods
 
@@ -41,24 +68,9 @@ const admin_comments = async function (comments) {
   return comments;
 };
 
-const comment_get = asyncHandler(async (req, res) => {
-  let comment = await Comment.findById(req.params.id);
-  const author = await User.findById(comment.user._id).exec();
-
-  comment = {
-    _id: comment._id,
-    author: author.fullname,
-    user: comment.user,
-    post: comment.post,
-    message: comment.message,
-    createdAt: comment.createdAt,
-  };
-
-  res.status(200).json(comment);
-});
-
 export default {
   comment_get,
+  comment_post,
   format_comments,
   admin_comments,
 };
