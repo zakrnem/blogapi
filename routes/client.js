@@ -5,7 +5,7 @@ import comment_controller from "../controllers/commentController";
 
 router.get("/posts", post_controller.client_posts_get);
 
-router.get("/posts/page/:id", post_controller.post_page_get);
+router.get("/posts/page/:id", post_controller.client_posts_page);
 
 router.get("/posts/:id", post_controller.client_post_get);
 

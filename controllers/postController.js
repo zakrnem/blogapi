@@ -24,7 +24,7 @@ function buildSummary(string, sentencesCount) {
 
 // CLIENT methods
 
-async function formatPosts(posts) {
+async function clientFormat(posts) {
   for (const key of Object.keys(posts)) {
     const comments = await Comment.find({ post: posts[key]._id }).exec();
     let commentsNumber = 0;
@@ -63,15 +63,15 @@ const client_post_get = asyncHandler(async (req, res) => {
 
 const client_posts_get = asyncHandler(async (req, res) => {
   let posts = await Post.find().sort({ createdAt: -1 }).limit(3).exec();
-  posts = await formatPosts(posts);
+  posts = await clientFormat(posts);
 
   res.status(200).json(posts);
 });
 
-const post_page_get = asyncHandler(async (req, res) => {
+const client_posts_page = asyncHandler(async (req, res) => {
   let N = req.params.id * 3 - 3;
   let posts = await Post.find().sort({ createdAt: -1 }).limit(3).skip(N).exec();
-  posts = await formatPosts(posts);
+  posts = await clientFormat(posts);
 
   if (posts.length > 0) {
     res.status(200).json(posts);
@@ -109,7 +109,7 @@ const admin_posts_get = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
-const create_post = asyncHandler(async (req, res) => {
+const admin_create_post = asyncHandler(async (req, res) => {
   const existingPost = await Post.find({ title: req.body.title });
   const newPost = new Post({
     user: req.body.user,
@@ -157,7 +157,7 @@ const admin_posts_page = asyncHandler(async (req, res) => {
   }
 });
 
-const post_update = asyncHandler(async (req, res) => {
+const admin_post_update = asyncHandler(async (req, res) => {
   const updatedPost = new Post({
     user: req.body.user,
     title: req.body.title,
@@ -179,7 +179,7 @@ const post_update = asyncHandler(async (req, res) => {
   }
 });
 
-const post_delete = asyncHandler(async (req, res) => {
+const admin_post_delete = asyncHandler(async (req, res) => {
   const deletedPost = await Post.findByIdAndDelete(req.params.id);
   if (deletedPost) {
     res.status(200).json({ message: `Deleted post with Id: ${req.params.id}` });
@@ -193,11 +193,11 @@ const post_delete = asyncHandler(async (req, res) => {
 export default {
   client_posts_get,
   client_post_get,
-  post_page_get,
-  create_post,
+  client_posts_page,
+  admin_create_post,
   admin_posts_get,
   admin_post_get,
   admin_posts_page,
-  post_update,
-  post_delete,
+  admin_post_update,
+  admin_post_delete,
 };
