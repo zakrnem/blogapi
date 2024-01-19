@@ -31,7 +31,19 @@ const comment_post = asyncHandler(async (req, res) => {
   res.status(200).json(newComment);
 });
 
-// Add method for clients to reply a comment
+const comment_reply_post = asyncHandler(async (req, res) => {
+  const parentComment = await Comment.findById(req.params.id)
+
+  const newComment = new Comment({
+    user: req.session.userId,
+    post: parentComment.post,
+    message: req.body.message,
+    parent: req.params.id,
+  });
+
+  await newComment.save();
+  res.status(200).json(newComment);
+})
 
 // CLIENT methods
 
@@ -43,6 +55,7 @@ const format_comments = async function (comments) {
       author: author.fullname,
       message: comments[key].message,
       createdAt: comments[key].createdAt,
+      url: "/api/client" + comments[key].url,
     };
   }
   return comments;
@@ -71,6 +84,7 @@ const admin_comments = async function (comments) {
 export default {
   comment_get,
   comment_post,
+  comment_reply_post,
   format_comments,
   admin_comments,
 };

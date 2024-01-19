@@ -14,6 +14,8 @@ router.post("/posts/:id", session_controller.isAuthenticated, comment_controller
 
 router.get("/comments/:id", comment_controller.comment_get);
 
+router.post("/comments/:id", session_controller.isAuthenticated, comment_controller.comment_reply_post);
+
 router.post("/login", session_controller.login);
 
 router.post(
