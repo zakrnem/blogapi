@@ -2,35 +2,57 @@ import express from "express";
 const router = express.Router();
 import asyncHandler from "express-async-handler";
 import User from "../models/user";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
-// Example login route
 const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
 
   if (user) {
     const match = await bcrypt.compare(req.body.password, user.password);
     if (match) {
-        res.status(200).json({message: `Succesfully logged in ${user.fullname}`})
+      req.session.userId = user._id;
+
+      res.cookie('session-cookie', req.sessionID, {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 60 * 1000,
+      });
+
+      res
+        .status(200)
+        .json({ message: `Succesfully logged in ${user.fullname}` });
     } else {
-        res.status(400).json({message: "Password is wrong"})
+      res.status(400).json({ message: "Password is wrong" });
     }
   } else {
-    res.status(400).json({message: "Username is wrong"})
+    res.status(400).json({ message: "Username is wrong" });
   }
-  const userId = 123; // Replace with your actual user ID
-
-  req.session.userId = userId;
-  res.send("Login successful");
 });
 
-// Example route to check if the user is authenticated
+const logout = asyncHandler(async (req, res) => {
+  if (!!req.session.userId) {
+    req.session.destroy();
+    res.clearCookie("session-cookie");
+    res.status(200).send("Logout successful");
+  }
+});
+
 const check_auth = asyncHandler(async (req, res) => {
   const isAuthenticated = !!req.session.userId;
-  res.json({ isAuthenticated });
+  res.status(200).json({ isAuthenticated });
 });
+
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) {
+    next();
+  } else {
+    res.status(401).send('Unauthorized, please log in.');
+  }
+};
 
 export default {
   login,
+  logout,
   check_auth,
+  isAuthenticated,
 };

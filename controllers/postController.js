@@ -19,7 +19,6 @@ function buildSummary(string, sentencesCount) {
   } else {
     summary = string;
   }
-
   return summary;
 }
 
@@ -33,7 +32,7 @@ async function formatPosts(posts) {
       commentsNumber = comments.length;
     }
     let summary = buildSummary(posts[key].content, 3);
-    let url = "/client" + posts[key].url;
+    let url = "/api/client" + posts[key].url;
     posts[key] = {
       title: posts[key].title,
       summary,
@@ -88,7 +87,7 @@ async function adminFormat(posts) {
     let comments = await Comment.find({ post: posts[key]._id }).exec();
     comments = await comment_controller.admin_comments(comments);
     let summary = buildSummary(posts[key].content, 3);
-    let url = "/admin" + posts[key].url;
+    let url = "/api/admin" + posts[key].url;
     posts[key] = {
       _id: posts[key]._id,
       user: posts[key].user,

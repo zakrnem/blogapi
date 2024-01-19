@@ -26,7 +26,7 @@ const format_comments = async function (comments) {
 const admin_comments = async function (comments) {
   for (const key of Object.keys(comments)) {
     const author = await User.findById(comments[key].user._id).exec();
-    const url = "/admin" + comments[key].url;
+    const url = "/api/admin" + comments[key].url;
 
     comments[key] = {
       _id: comments[key]._id,
