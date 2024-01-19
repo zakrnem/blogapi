@@ -10,11 +10,19 @@ router.get("/posts/page/:id", post_controller.client_posts_page);
 
 router.get("/posts/:id", post_controller.client_post_get);
 
-router.post("/posts/:id", session_controller.isAuthenticated, comment_controller.comment_post);
+router.post(
+  "/posts/:id",
+  session_controller.isAuthenticated,
+  comment_controller.comment_post,
+);
 
 router.get("/comments/:id", comment_controller.comment_get);
 
-router.post("/comments/:id", session_controller.isAuthenticated, comment_controller.comment_reply_post);
+router.post(
+  "/comments/:id",
+  session_controller.isAuthenticated,
+  comment_controller.comment_reply_post,
+);
 
 router.post("/login", session_controller.login);
 

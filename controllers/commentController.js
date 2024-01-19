@@ -32,7 +32,7 @@ const comment_post = asyncHandler(async (req, res) => {
 });
 
 const comment_reply_post = asyncHandler(async (req, res) => {
-  const parentComment = await Comment.findById(req.params.id)
+  const parentComment = await Comment.findById(req.params.id);
 
   const newComment = new Comment({
     user: req.session.userId,
@@ -43,7 +43,7 @@ const comment_reply_post = asyncHandler(async (req, res) => {
 
   await newComment.save();
   res.status(200).json(newComment);
-})
+});
 
 // CLIENT methods
 
@@ -81,10 +81,22 @@ const admin_comments = async function (comments) {
   return comments;
 };
 
+const comment_delete = asyncHandler(async (req, res) => {
+  const deletedComment = await Comment.findByIdAndDelete(req.params.id);
+  if (deletedComment) {
+    res.status(200).json({ message: `Deleted post with Id: ${req.params.id}` });
+  } else {
+    res
+      .status(404)
+      .json({ message: `No comment with Id: ${req.params.id} exists.` });
+  }
+});
+
 export default {
   comment_get,
   comment_post,
   comment_reply_post,
   format_comments,
   admin_comments,
+  comment_delete,
 };

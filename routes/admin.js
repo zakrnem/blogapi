@@ -56,4 +56,10 @@ router.post(
 
 router.get("/is_auth", session_controller.check_auth);
 
+router.delete(
+  "/comments/:id",
+  session_controller.isAuthenticated,
+  comment_controller.comment_delete,
+);
+
 export default router;
