@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Post from "../models/post";
 import Comment from "../models/comment";
+import User from "../models/user"
 import { mongoose } from "mongoose";
 import comment_controller from "./commentController";
 
@@ -51,8 +52,11 @@ const client_post_get = asyncHandler(async (req, res) => {
     let comments = await Comment.find({ post: post._id }).exec();
     comments = await comment_controller.format_comments(comments);
 
+    let user = await User.findById(post.user)
+    const author = user.fullname
+
     let postObj = post.toObject();
-    postObj = { ...postObj, comments: comments };
+    postObj = { ...postObj, author: author, comments: comments };
     res.status(200).json(postObj);
   } catch {
     res
