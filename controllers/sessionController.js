@@ -6,18 +6,15 @@ import bcrypt from "bcryptjs";
 
 const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
-
   if (user) {
     const match = await bcrypt.compare(req.body.password, user.password);
     if (match) {
       req.session.userId = user._id;
-
       res.cookie("session-cookie", req.sessionID, {
         secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 2 * 60 * 1000,
+        httpOnly: false,
+        maxAge: 1 * 60 * 1000,
       });
-
       res
         .status(200)
         .json({ message: `Succesfully logged in ${user.fullname}` });
@@ -39,7 +36,7 @@ const logout = asyncHandler(async (req, res) => {
 
 const check_auth = asyncHandler(async (req, res) => {
   const isAuthenticated = !!req.session.userId;
-  res.status(200).json({ isAuthenticated });
+  res.status(200).json(isAuthenticated);
 });
 
 const isAuthenticated = (req, res, next) => {
