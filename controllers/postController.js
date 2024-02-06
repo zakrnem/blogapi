@@ -33,14 +33,13 @@ async function clientFormat(posts) {
       commentsNumber = comments.length;
     }
     let summary = buildSummary(posts[key].content, 3);
-    let url = "/api/client" + posts[key].url;
     posts[key] = {
       title: posts[key].title,
       summary,
       date: posts[key].createdAt,
       visible: posts[key].visible,
       commentsNumber,
-      url,
+      id: posts[key].id,
     };
   }
   return posts;
