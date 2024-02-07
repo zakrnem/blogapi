@@ -1,8 +1,25 @@
-import express from "express";
-const router = express.Router();
 import asyncHandler from "express-async-handler";
 import User from "../models/user";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+dotenv.config();
+
+const signup = asyncHandler(async (req, res) => {
+  const password = bcrypt.hashSync(req.body.password, process.env.SALT);
+  const newUser = new User({
+    first_name: req.body.firstName,
+    last_name: req.body.lastName,
+    username: req.body.username,
+    password,
+  })
+  console.log(newUser)
+  try {
+    await newUser.save()
+  res.status(200).json(newUser);
+  } catch(error) {
+    throw new Error(error)
+  }
+})
 
 const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
@@ -30,7 +47,7 @@ const logout = asyncHandler(async (req, res) => {
   if (!!req.session.userId) {
     req.session.destroy();
     res.clearCookie("session-cookie");
-    res.status(200).send("Logout successful");
+    res.status(200).send({message: "Logout successful"});
   }
 });
 
@@ -48,6 +65,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 export default {
+  signup,
   login,
   logout,
   check_auth,

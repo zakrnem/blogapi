@@ -24,6 +24,8 @@ router.post(
   comment_controller.comment_reply_post,
 );
 
+router.post("/signup", session_controller.signup)
+
 router.post("/login", session_controller.login);
 
 router.post(

@@ -57,12 +57,6 @@ app.use(
   }),
 );
 
-app.use((req, res, next) => {
-  //console.log('Incoming Request Headers:', req.headers);
-  console.log('Incoming Cookies:', req.cookies);
-  next();
-});
-
 app.use("/api/client", clientRouter);
 app.use("/api/admin", adminRouter);
 
