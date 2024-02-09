@@ -56,7 +56,7 @@ const check_auth = asyncHandler(async (req, res) => {
   res.status(200).json(isAuthenticated);
 });
 
-const isAuthenticated = (req, res, next) => {
+const is_authenticated = (req, res, next) => {
   if (req.session.userId) {
     next();
   } else {
@@ -64,10 +64,23 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
+const get_user = asyncHandler(async (req, res) => {
+  const userId = req.session.userId
+  if (userId) {
+    const user = await User.findById(userId).exec()
+    const fullname = user.fullname
+    res.status(200).send({ fullname })
+  } else {
+    res.status(401).send("Unauthorized, please log in.");
+  }
+  
+})
+
 export default {
   signup,
   login,
   logout,
   check_auth,
-  isAuthenticated,
+  is_authenticated,
+  get_user,
 };

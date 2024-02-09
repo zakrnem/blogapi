@@ -12,7 +12,7 @@ router.get("/posts/:id", post_controller.client_post_get);
 
 router.post(
   "/posts/:id",
-  session_controller.isAuthenticated,
+  session_controller.is_authenticated,
   comment_controller.comment_post,
 );
 
@@ -20,7 +20,7 @@ router.get("/comments/:id", comment_controller.comment_get);
 
 router.post(
   "/comments/:id",
-  session_controller.isAuthenticated,
+  session_controller.is_authenticated,
   comment_controller.comment_reply_post,
 );
 
@@ -30,10 +30,12 @@ router.post("/login", session_controller.login);
 
 router.post(
   "/logout",
-  session_controller.isAuthenticated,
+  session_controller.is_authenticated,
   session_controller.logout,
 );
 
 router.get("/is_auth", session_controller.check_auth);
+
+router.get("/session_user", session_controller.get_user)
 
 export default router;
