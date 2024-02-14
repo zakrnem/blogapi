@@ -4,6 +4,8 @@ import Comment from "../models/comment";
 import User from "../models/user";
 import { mongoose } from "mongoose";
 
+// CLIENT methods
+
 const comment_get = asyncHandler(async (req, res) => {
   let comment = await Comment.findById(req.params.id);
   const author = await User.findById(comment.user._id).exec();
@@ -45,7 +47,16 @@ const comment_reply_post = asyncHandler(async (req, res) => {
   res.status(200).json(newComment);
 });
 
-// CLIENT methods
+const user_get = asyncHandler(async (req, res) => {
+  try {
+    const comments = await Comment.find({ user: req.params.id })
+    // console.log(comments)
+    res.status(200).json({comments})
+  } catch (error) {
+    throw new Error(error);
+  }
+  
+})
 
 const format_comments = async function (comments) {
   for (const key of Object.keys(comments)) {
@@ -99,4 +110,5 @@ export default {
   format_comments,
   admin_comments,
   comment_delete,
+  user_get,
 };
