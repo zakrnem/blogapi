@@ -11,15 +11,14 @@ const signup = asyncHandler(async (req, res) => {
     last_name: req.body.lastName,
     username: req.body.username,
     password,
-  })
-  console.log(newUser)
+  });
   try {
-    await newUser.save()
-  res.status(200).json(newUser);
-  } catch(error) {
-    throw new Error(error)
+    await newUser.save();
+    res.status(200).json(newUser);
+  } catch (error) {
+    throw new Error(error);
   }
-})
+});
 
 const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
@@ -30,7 +29,7 @@ const login = asyncHandler(async (req, res) => {
       res.cookie("session-cookie", req.sessionID, {
         secure: process.env.NODE_ENV === "production",
         httpOnly: false,
-        maxAge: 1 * 60 * 1000,
+        maxAge: 30 * 60 * 1000,
       });
       res
         .status(200)
@@ -47,7 +46,7 @@ const logout = asyncHandler(async (req, res) => {
   if (!!req.session.userId) {
     req.session.destroy();
     res.clearCookie("session-cookie");
-    res.status(200).send({message: "Logout successful"});
+    res.status(200).send({ message: "Logout successful" });
   }
 });
 
@@ -65,16 +64,15 @@ const is_authenticated = (req, res, next) => {
 };
 
 const get_user = asyncHandler(async (req, res) => {
-  const userId = req.session.userId
+  const userId = req.session.userId;
   if (userId) {
-    const user = await User.findById(userId).exec()
-    const fullname = user.fullname
-    res.status(200).send({ fullname })
+    const user = await User.findById(userId).exec();
+    const fullname = user.fullname;
+    res.status(200).send({ fullname, userId });
   } else {
     res.status(401).send("Unauthorized, please log in.");
   }
-  
-})
+});
 
 export default {
   signup,

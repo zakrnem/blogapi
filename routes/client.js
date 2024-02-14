@@ -24,7 +24,7 @@ router.post(
   comment_controller.comment_reply_post,
 );
 
-router.post("/signup", session_controller.signup)
+router.post("/signup", session_controller.signup);
 
 router.post("/login", session_controller.login);
 
@@ -36,6 +36,8 @@ router.post(
 
 router.get("/is_auth", session_controller.check_auth);
 
-router.get("/session_user", session_controller.get_user)
+router.get("/user", session_controller.get_user);
+
+router.get("/user/:id", comment_controller.user_get)
 
 export default router;
