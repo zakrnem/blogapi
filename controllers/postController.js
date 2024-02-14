@@ -4,6 +4,7 @@ import Comment from "../models/comment";
 import User from "../models/user";
 import { mongoose } from "mongoose";
 import comment_controller from "./commentController";
+import { format } from "date-fns";
 
 function buildSummary(string, sentencesCount) {
   const arr = string.match(/[^.!?]+[.!?]+/g);
@@ -33,10 +34,13 @@ async function clientFormat(posts) {
       commentsNumber = comments.length;
     }
     let summary = buildSummary(posts[key].content, 3);
+    const parsedDate = new Date(posts[key].createdAt);
+    const date = format(parsedDate, "MM-dd-yyyy");
+
     posts[key] = {
       title: posts[key].title,
       summary,
-      date: posts[key].createdAt,
+      date: date,
       visible: posts[key].visible,
       commentsNumber,
       id: posts[key].id,
@@ -47,6 +51,8 @@ async function clientFormat(posts) {
 
 const client_post_get = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
+  const parsedDate = new Date(post.createdAt);
+  const date = format(parsedDate, "MM-dd-yyyy");
   try {
     let comments = await Comment.find({ post: post._id }).exec();
     comments = await comment_controller.format_comments(comments);
@@ -55,6 +61,7 @@ const client_post_get = asyncHandler(async (req, res) => {
     const author = user.fullname;
 
     let postObj = post.toObject();
+    postObj.createdAt = date
     postObj = { ...postObj, author: author, comments: comments };
     res.status(200).json(postObj);
   } catch {

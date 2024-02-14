@@ -3,6 +3,7 @@ import Post from "../models/post";
 import Comment from "../models/comment";
 import User from "../models/user";
 import { mongoose } from "mongoose";
+import { format } from "date-fns";
 
 // CLIENT methods
 
@@ -50,25 +51,26 @@ const comment_reply_post = asyncHandler(async (req, res) => {
 const user_get = asyncHandler(async (req, res) => {
   try {
     const comments = await Comment.find({ user: req.params.id })
-    // console.log(comments)
-    res.status(200).json({comments})
+    const formattedComments = await format_comments(comments)
+    res.status(200).json(formattedComments)
   } catch (error) {
     throw new Error(error);
-  }
-  
+  }  
 })
 
 const format_comments = async function (comments) {
   for (const key of Object.keys(comments)) {
     const author = await User.findById(comments[key].user._id).exec();
-
+    const parsedDate = new Date(comments[key].createdAt);
+    const date = format(parsedDate, "MM-dd-yyyy");
     comments[key] = {
       author: author.fullname,
       message: comments[key].message,
-      createdAt: comments[key].createdAt,
+      createdAt: date,
       url: "/api/client" + comments[key].url,
     };
   }
+  console.log(comments)
   return comments;
 };
 
@@ -78,6 +80,8 @@ const admin_comments = async function (comments) {
   for (const key of Object.keys(comments)) {
     const author = await User.findById(comments[key].user._id).exec();
     const url = "/api/admin" + comments[key].url;
+    const parsedDate = new Date(comments[key].createdAt);
+    const date = format(parsedDate, "MM-dd-yyyy");
 
     comments[key] = {
       _id: comments[key]._id,
@@ -85,7 +89,7 @@ const admin_comments = async function (comments) {
       user: comments[key].user,
       post: comments[key].post,
       message: comments[key].message,
-      createdAt: comments[key].createdAt,
+      createdAt: date,
       url,
     };
   }
