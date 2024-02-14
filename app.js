@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import debug from "debug";
 import session from "express-session";
-import cors from "cors"
+import cors from "cors";
 
 // Setup mongoDB connection
 import mongoose from "mongoose";
@@ -35,7 +35,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-
 const corsOptions = {
   origin: process.env.FRONT_END_URL,
   credentials: true,
@@ -52,7 +51,7 @@ app.use(
     cookie: {
       name: "session-cookie",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1 * 60 * 1000,
+      maxAge: 30 * 60 * 1000,
     },
   }),
 );
