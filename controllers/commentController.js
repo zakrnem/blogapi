@@ -51,26 +51,31 @@ const comment_reply_post = asyncHandler(async (req, res) => {
 const user_get = asyncHandler(async (req, res) => {
   try {
     const comments = await Comment.find({ user: req.params.id })
-    const formattedComments = await format_comments(comments)
+    const formattedComments = await format_comments(comments, true)
     res.status(200).json(formattedComments)
   } catch (error) {
     throw new Error(error);
-  }  
+  }
 })
 
-const format_comments = async function (comments) {
+const format_comments = async function (comments, getPost) {
+  let post = ""
   for (const key of Object.keys(comments)) {
     const author = await User.findById(comments[key].user._id).exec();
     const parsedDate = new Date(comments[key].createdAt);
     const date = format(parsedDate, "MM-dd-yyyy");
+
+    if (getPost) {
+      post = await Post.findById(comments[key].post._id).exec()
+    }
     comments[key] = {
       author: author.fullname,
       message: comments[key].message,
       createdAt: date,
       url: "/api/client" + comments[key].url,
+      post,
     };
   }
-  console.log(comments)
   return comments;
 };
 
