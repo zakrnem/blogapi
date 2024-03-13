@@ -62,4 +62,6 @@ router.delete(
   comment_controller.comment_delete,
 );
 
+router.get("/comments", comment_controller.get_comments);
+
 export default router;

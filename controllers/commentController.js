@@ -50,23 +50,23 @@ const comment_reply_post = asyncHandler(async (req, res) => {
 
 const user_get = asyncHandler(async (req, res) => {
   try {
-    const comments = await Comment.find({ user: req.params.id })
-    const formattedComments = await format_comments(comments, true)
-    res.status(200).json(formattedComments)
+    const comments = await Comment.find({ user: req.params.id });
+    const formattedComments = await format_comments(comments, true);
+    res.status(200).json(formattedComments);
   } catch (error) {
     throw new Error(error);
   }
-})
+});
 
 const format_comments = async function (comments, getPost) {
-  let post = ""
+  let post = "";
   for (const key of Object.keys(comments)) {
     const author = await User.findById(comments[key].user._id).exec();
     const parsedDate = new Date(comments[key].createdAt);
     const date = format(parsedDate, "MM-dd-yyyy");
 
     if (getPost) {
-      post = await Post.findById(comments[key].post._id).exec()
+      post = await Post.findById(comments[key].post._id).exec();
     }
     comments[key] = {
       author: author.fullname,
@@ -112,6 +112,30 @@ const comment_delete = asyncHandler(async (req, res) => {
   }
 });
 
+const get_comments = asyncHandler(async (req, res) => {
+  const comments = await Comment.find().sort({ createdAt: -1 });
+
+  let resObj = [];
+
+  for (const key in comments) {
+    const author = await User.findById(comments[key].user).exec();
+    const post = await Post.findById(comments[key].post).exec();
+    const parsedDate = new Date(comments[key].createdAt);
+    const date = format(parsedDate, "MM-dd-yyyy");
+    const commentUrl = "/comments/" + comments[key]._id
+
+    resObj.push({
+      author: author.fullname,
+      post: post.title,
+      date,
+      message: comments[key].message,
+      postUrl: post.url,
+      commentUrl,
+    });
+  }
+  res.status(200).json(resObj);
+});
+
 export default {
   comment_get,
   comment_post,
@@ -120,4 +144,5 @@ export default {
   admin_comments,
   comment_delete,
   user_get,
+  get_comments,
 };

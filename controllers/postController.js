@@ -61,7 +61,7 @@ const client_post_get = asyncHandler(async (req, res) => {
     const author = user.fullname;
 
     let postObj = post.toObject();
-    postObj.createdAt = date
+    postObj.createdAt = date;
     postObj = { ...postObj, author: author, comments: comments };
     res.status(200).json(postObj);
   } catch {
