@@ -46,6 +46,16 @@ router.get(
   comment_controller.comment_get,
 );
 
+router.delete(
+  "/comments/:id",
+  session_controller.is_authenticated,
+  comment_controller.comment_delete,
+);
+
+router.get("/comments", 
+session_controller.is_authenticated,
+comment_controller.get_comments);
+
 router.post("/login", session_controller.login);
 
 router.post(
@@ -56,12 +66,10 @@ router.post(
 
 router.get("/is_auth", session_controller.check_auth);
 
-router.delete(
-  "/comments/:id",
-  session_controller.is_authenticated,
-  comment_controller.comment_delete,
-);
+router.post("/login", session_controller.login);
 
-router.get("/comments", comment_controller.get_comments);
+router.get("/user", session_controller.get_user);
+
+router.get("/user/:id", comment_controller.user_get);
 
 export default router;
