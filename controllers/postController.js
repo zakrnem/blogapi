@@ -40,7 +40,7 @@ async function clientFormat(posts) {
     posts[key] = {
       title: posts[key].title,
       summary,
-      date: date,
+      date,
       visible: posts[key].visible,
       commentsNumber,
       id: posts[key].id,
@@ -97,12 +97,16 @@ async function adminFormat(posts) {
     let comments = await Comment.find({ post: posts[key]._id }).exec();
     comments = await comment_controller.admin_comments(comments);
     let summary = buildSummary(posts[key].content, 3);
+
+    const parsedDate = new Date(posts[key].createdAt);
+    const date = format(parsedDate, "MM-dd-yyyy");
+
     let url = "/api/admin" + posts[key].url;
     posts[key] = {
       _id: posts[key]._id,
       user: posts[key].user,
       visible: posts[key].visible,
-      createdAt: posts[key].createdAt,
+      date,
       title: posts[key].title,
       summary,
       comments,
@@ -122,7 +126,7 @@ const admin_posts_get = asyncHandler(async (req, res) => {
 const admin_create_post = asyncHandler(async (req, res) => {
   const existingPost = await Post.find({ title: req.body.title });
   const newPost = new Post({
-    user: req.body.user,
+    user: req.body.user.userId,
     title: req.body.title,
     content: req.body.content,
     visible: req.body.visible,
