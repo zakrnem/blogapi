@@ -52,9 +52,11 @@ router.delete(
   comment_controller.comment_delete,
 );
 
-router.get("/comments", 
-session_controller.is_authenticated,
-comment_controller.get_comments);
+router.get(
+  "/comments",
+  session_controller.is_authenticated,
+  comment_controller.get_comments,
+);
 
 router.post("/login", session_controller.login);
 

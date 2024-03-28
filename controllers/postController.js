@@ -101,6 +101,11 @@ async function adminFormat(posts) {
     const parsedDate = new Date(posts[key].createdAt);
     const date = format(parsedDate, "MM-dd-yyyy");
 
+    let commentsNumber = 0;
+    if (comments.length > 0) {
+      commentsNumber = comments.length;
+    }
+
     let url = "/api/admin" + posts[key].url;
     posts[key] = {
       _id: posts[key]._id,
@@ -110,6 +115,7 @@ async function adminFormat(posts) {
       title: posts[key].title,
       summary,
       comments,
+      commentsNumber,
       url,
     };
   }

@@ -122,7 +122,7 @@ const get_comments = asyncHandler(async (req, res) => {
     const post = await Post.findById(comments[key].post).exec();
     const parsedDate = new Date(comments[key].createdAt);
     const date = format(parsedDate, "MM-dd-yyyy");
-    const commentUrl = "/comments/" + comments[key]._id
+    const commentUrl = "/comments/" + comments[key]._id;
 
     resObj.push({
       author: author.fullname,
