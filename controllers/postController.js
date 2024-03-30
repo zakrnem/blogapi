@@ -101,6 +101,9 @@ async function adminFormat(posts) {
     const parsedDate = new Date(posts[key].createdAt);
     const date = format(parsedDate, "MM-dd-yyyy");
 
+    let user = await User.findById(posts[key].user);
+    const author = user.fullname;
+
     let commentsNumber = 0;
     if (comments.length > 0) {
       commentsNumber = comments.length;
@@ -117,6 +120,7 @@ async function adminFormat(posts) {
       comments,
       commentsNumber,
       url,
+      author,
     };
   }
   return posts;
