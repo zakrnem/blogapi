@@ -109,7 +109,6 @@ async function adminFormat(posts) {
       commentsNumber = comments.length;
     }
 
-    let url = "/api/admin" + posts[key].url;
     posts[key] = {
       _id: posts[key]._id,
       user: posts[key].user,
@@ -119,7 +118,6 @@ async function adminFormat(posts) {
       summary,
       comments,
       commentsNumber,
-      url,
       author,
     };
   }
