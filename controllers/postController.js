@@ -10,7 +10,7 @@ function buildSummary(string, sentencesCount) {
   const arr = string.match(/[^.!?]+[.!?]+/g);
   let summary = "";
 
-  if (arr !== null && arr.length < sentencesCount) {
+  if (arr !== null && arr.length > sentencesCount) {
     for (let i = 0; i < sentencesCount; i++) {
       if (i === 0) {
         summary += arr[i];
