@@ -59,13 +59,13 @@ const adminLogin = asyncHandler(async (req, res) => {
           .status(200)
           .json({ message: `Succesfully logged in ${user.fullname}` });
       } else {
-        res.status(400).json({ message: "Password is wrong" });
+        res.status(401).json({ message: "Password is wrong" });
       }
     } else {
-      res.status(400).json({ message: "User is not admin" });
+      res.status(403).json({ message: "User is not admin" });
     }
   } else {
-    res.status(400).json({ message: "Username is wrong" });
+    res.status(400).json({ message: "Username not found" });
   }
 });
 
